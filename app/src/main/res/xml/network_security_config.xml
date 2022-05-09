@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">dapi.kakao.com</domain>
+    </domain-config>
+        <domain-config cleartextTrafficPermitted="true">
+            <domain includeSubdomains="true">openapi.11st.co.kr</domain>
+        </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">maps.daum-img.net</domain>
+    </domain-config>
+
+
+
+</network-security-config>
+	

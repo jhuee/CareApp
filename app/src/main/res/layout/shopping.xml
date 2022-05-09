@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="50dp"
+        android:fadingEdge="vertical"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/logo_color" />
+
+        <EditText
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@id/logo"
+            android:layout_marginLeft="55dp"
+            android:layout_marginRight="55dp"
+            android:layout_toRightOf="@id/button"
+            android:background="@drawable/search_bar"
+            android:textAlignment="center"
+            android:hint="검색어를 입력해주세요"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:gravity="center_horizontal|center_vertical" />
+
+
+        <ImageButton
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="#00FFFFFF"
+            android:onClick="mOnClick"
+            android:src="@drawable/search_icon" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="30dp"
+        android:fadingEdge="vertical"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <Button
+            android:id="@+id/prePageButton"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:backgroundTint="#EE1733"
+            android:layout_alignParentLeft="true"
+            android:onClick="mOnClick"
+            android:text="pre"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp"/>
+
+        <Button
+            android:id="@+id/nextPageButton"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:backgroundTint="#EE1733"
+            android:layout_alignParentRight="true"
+            android:onClick="mOnClick"
+            android:text="Next"
+            android:textColor="#FFFFFF"
+            android:textSize="8sp"
+            tools:text="Next" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white" />
+
+
+
+</LinearLayout>
