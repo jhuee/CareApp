@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
 
             //YOUR_RSET_API_KEY 에 REST_API_KEY를 넣어줘야함.
-            Call<CategoryResult> call = entityKeyword.getSearchHospital("KakaoAK af09bdf5053ceef61e79c7731727e109", "동물병원", "HP8", x+"", y+"", 2000);
+            Call<CategoryResult> call = entityKeyword.getSearchHospital(getString(R.string.restapi_key), "동물병원", "HP8", x+"", y+"", 2000);
             call.enqueue(new Callback<CategoryResult>() {
                 @Override
                 public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
