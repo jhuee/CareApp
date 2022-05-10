@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryResult implements Parcelable {
+
     @SerializedName("meta")
     @Expose
     private Meta meta;
@@ -33,6 +34,21 @@ public class CategoryResult implements Parcelable {
         this.documents = documents;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.meta, flags);
+        dest.writeList(this.documents);
+    }
+
+    public CategoryResult() {
+    }
+
     protected CategoryResult(Parcel in) {
         this.meta = in.readParcelable(Meta.class.getClassLoader());
         this.documents = new ArrayList<Document>();
@@ -50,20 +66,4 @@ public class CategoryResult implements Parcelable {
             return new CategoryResult[size];
         }
     };
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.meta, flags);
-        dest.writeList(this.documents);
-    }
-
-    public CategoryResult() {
-    }
-
 }

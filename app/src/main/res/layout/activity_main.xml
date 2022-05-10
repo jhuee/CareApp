@@ -22,11 +22,11 @@
 <!--    />-->
 
     <ImageButton
-        android:id="@+id/hpBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:src="@drawable/hospital_maker"
+        android:id="@+id/shopBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/search_icon"
         android:contentDescription="@null"
         />
 
