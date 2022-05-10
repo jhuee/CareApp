@@ -1,13 +1,10 @@
 package com.example.nyang1.category_search;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class Meta implements Parcelable {
 
@@ -16,40 +13,64 @@ public class Meta implements Parcelable {
     private SameName sameName;
     @SerializedName("pageable_count")
     @Expose
-    private int pageableCount;
+    private Integer pageableCount;
     @SerializedName("total_count")
     @Expose
-    private int totalCount;
+    private Integer totalCount;
     @SerializedName("is_end")
     @Expose
-    private boolean isEnd;
+    private Boolean isEnd;
 
-    public class SameName {
-        private List<String> region;
-        private String keyword;
-        private String selected_region;
+    protected Meta(Parcel in) {
+        sameName = in.readParcelable(SameName.class.getClassLoader());
+        if (in.readByte() == 0) {
+            pageableCount = null;
+        } else {
+            pageableCount = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            totalCount = null;
+        } else {
+            totalCount = in.readInt();
+        }
+        byte tmpIsEnd = in.readByte();
+        isEnd = tmpIsEnd == 0 ? null : tmpIsEnd == 1;
     }
 
-    public class Documents {
-        private String place_name;
-        private String distance;
-        private String place_url;
-        private String category_name;
-        private String address_name;
-        private String road_address_name;
-        private String id;
-        private String phone;
-        private String category_group_code;
-        private String category_group_name;
-        private String x;
-        private String y;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(sameName, flags);
+        if (pageableCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(pageableCount);
+        }
+        if (totalCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(totalCount);
+        }
+        dest.writeByte((byte) (isEnd == null ? 0 : isEnd ? 1 : 2));
     }
 
-    public class KeyWord {
-        private Meta meta;
-        private List<Documents> documents;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
+    public static final Creator<Meta> CREATOR = new Creator<Meta>() {
+        @Override
+        public Meta createFromParcel(Parcel in) {
+            return new Meta(in);
+        }
+
+        @Override
+        public Meta[] newArray(int size) {
+            return new Meta[size];
+        }
+    };
 
     public SameName getSameName() {
         return sameName;
@@ -62,60 +83,4 @@ public class Meta implements Parcelable {
     public Integer getPageableCount() {
         return pageableCount;
     }
-
-    public void setPageableCount(Integer pageableCount) {
-        this.pageableCount = pageableCount;
-    }
-
-    public Integer getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(Integer totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public Boolean getIsEnd() {
-        return isEnd;
-    }
-
-    public void setIsEnd(Boolean isEnd) {
-        this.isEnd = isEnd;
-    }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable((Parcelable) this.sameName, flags);
-        dest.writeValue(this.pageableCount);
-        dest.writeValue(this.totalCount);
-        dest.writeValue(this.isEnd);
-    }
-
-    public Meta() {
-    }
-
-    protected Meta(Parcel in) {
-        this.sameName = in.readParcelable(SameName.class.getClassLoader());
-        this.pageableCount = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.totalCount = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.isEnd = (Boolean) in.readValue(Boolean.class.getClassLoader());
-    }
-
-    public static final Creator<Meta> CREATOR = new Creator<Meta>() {
-        @Override
-        public Meta createFromParcel(Parcel source) {
-            return new Meta(source);
-        }
-
-        @Override
-        public Meta[] newArray(int size) {
-            return new Meta[size];
-        }
-    };
 }
