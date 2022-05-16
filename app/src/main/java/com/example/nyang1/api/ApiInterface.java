@@ -23,9 +23,9 @@ public interface ApiInterface {
 
     //카테고리로 검색
     @GET("v2/local/search/category.json")
-    Call<CategoryResult> getdg(
+    Call<CategoryResult> getSearchPharmacy(
             @Header("Authorization") String token,
-            @Query("query") String query,
+
             @Query("category_group_code") String category_group_code,
             @Query("x") String x,
             @Query("y") String y,
