@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         Log.d(LOG_TAG, "현재위치 => " + mCurrentX + "  " + mCurrentY);
 
         requestHospitalLocal(mCurrentX, mCurrentY);
+        requestPharmacyLocal(mCurrentX, mCurrentY);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private void requestHospitalLocal(double x, double y) {
         hospitalList.clear();
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<CategoryResult> call = apiInterface.getSearchHospital(getString(R.string.restapi_key), "동물병원", "HP8", x + "", y + "", 10000); //반경 2km로
+        Call<CategoryResult> call = apiInterface.getSearchHospital(getString(R.string.restapi_key), "동물병원", "HP8", y+ "", x + "", 10000); //반경 2km로
         call.enqueue(new Callback<CategoryResult>() {
             @Override
             public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
@@ -151,12 +152,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                     Log.d("retrofit", result);
                     Log.e("retrofit", "성공");
 
-                    MapCircle circle1 = new MapCircle(
-                            MapPoint.mapPointWithGeoCoord(y, x), // center
-                            1000, // radius
-                            Color.argb(128, 255, 0, 0), // strokeColor
-                            Color.argb(128, 0, 255, 0) // fillColor
-                    );
                     int tagNum = 10;
                     for (Document document : hospitalList) {
                         MapPOIItem marker = new MapPOIItem();
@@ -201,91 +196,67 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
 
         });
+    }
 
-//    private void requestSearchLocal(double x, double y)  {
-//        Log.d("SIZE2",   "하");
-//        hospitalList.clear();
-//        pharmacyList.clear();//리스트 clear
-//        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-//        Call<CategoryResult> call = apiInterface.getSearchCategory(getString(R.string.restapi_key), "동물병원","HP8", x + "", y + "", 2000); //반경 2km로 검색
-//        call.enqueue(new Callback<CategoryResult>() {
-//
-//            @Override
-//            public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
-//                if (response.isSuccessful()) {
-//                    assert response.body() != null;
-//                    if (response.body().getDocuments() != null) {
-//                        Log.d(LOG_TAG, "병원리스트 성공");
-//                        hospitalList.addAll(response.body().getDocuments());
-//                    } else { Log.d(LOG_TAG, "병원리스트 실패");}
-//                    call = apiInterface.getSearchCategory(getString(R.string.restapi_key), "동물" ,"PH9", x + "", y + "", 2000);
-//                    call.enqueue(new Callback<CategoryResult>() {
-//                        @Override
-//                        public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
-//                            if (response.isSuccessful()) {
-//                                assert response.body() != null;
-//                                Log.d(LOG_TAG, "약국리스트 성공");
-//                                pharmacyList.addAll(response.body().getDocuments());//모두 통신 성공 시 circle 생성
-//                                MapCircle circle1 = new MapCircle(
-//                                        MapPoint.mapPointWithGeoCoord(y, x), // center
-//                                        1000, // radius
-//                                        Color.argb(128, 255, 0, 0), // strokeColor
-//                                        Color.argb(128, 0, 255, 0)); // fillColor
-//                                circle1.setTag(5678);
-//                                mapView.addCircle(circle1);
-//                                Log.d("SIZE1", hospitalList.size() + "");
-//                                Log.d("SIZE2", pharmacyList.size() + "");
-//                                //모두 성공 시 마커 생성
-//                                int tagNum = 10;
-//                                for (Document document : hospitalList) {
-//                                    MapPOIItem maker = new MapPOIItem();
-//                                    maker.setItemName(document.getPlaceName());
-//                                    double x = Double.parseDouble(document.getX()); //String을 double로 형변환
-//                                    double y = Double.parseDouble(document.getY());
-//
-//                                    //카카오맵은 new MapPoint()로 생성 못 함
-//                                    MapPoint mapPoint = MapPoint.mapPointWithCONGCoord(x, y);
-//                                    maker.setMapPoint(mapPoint);
-//                                    maker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-//                                    maker.setCustomImageResourceId(R.drawable.hospital_maker);
-//                                    maker.setCustomImageAutoscale(false); //지도 라이브러리의 스케일 기능 끔
-//                                    maker.setCustomImageAnchor(0.5f, 1.0f); //마커 기준이 되는 앵커포인트 지정
-//                                    mapView.addPOIItem(maker);
-//                                }
-//                                for (Document document : pharmacyList) {
-//                                    MapPOIItem maker = new MapPOIItem();
-//                                    maker.setItemName(document.getPlaceName());
-//                                    double x = Double.parseDouble(document.getX()); //String을 double로 형변환
-//                                    double y = Double.parseDouble(document.getY());
-//
-//                                    //카카오맵은 new MapPoint()로 생성 못 함
-//                                    MapPoint mapPoint = MapPoint.mapPointWithCONGCoord(x, y);
-//                                    maker.setMapPoint(mapPoint);
-//                                    maker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-//                                    maker.setCustomImageResourceId(R.drawable.hospital_maker);
-//                                    maker.setCustomImageAutoscale(false); //지도 라이브러리의 스케일 기능 끔
-//                                    maker.setCustomImageAnchor(0.5f, 1.0f); //마커 기준이 되는 앵커포인트 지정
-//                                    mapView.addPOIItem(maker);
-//                                }
-//                            } else {
-//                                Log.d("SIZE2",   "안돼");
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<CategoryResult> call, Throwable t) {
-//                            Log.d("SIZE2",   "실패");
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CategoryResult> call, Throwable t) {
-//            }
-//        });
-//    }
+    private void requestPharmacyLocal(double x, double y) {
+        pharmacyList.clear();
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<CategoryResult> call = apiInterface.getSearchPharmacy(getString(R.string.restapi_key), "PM9", y+ "", x + "", 10000); //반경 2km로
+        call.enqueue(new Callback<CategoryResult>() {
+            @Override
+            public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
+                Log.e("tag1", "확인");
+                if (response.isSuccessful()) {
+                    pharmacyList.addAll(response.body().getDocuments());
+                    final String result
+                            = response.raw().body().toString();
+                    Log.d("retrofit", result);
+                    Log.e("retrofit", "성공");
 
+                    int tagNum = 10;
+                    for (Document document : pharmacyList) {
+                        MapPOIItem marker = new MapPOIItem();
+                        marker.setItemName(document.getPlaceName());
+                        marker.setTag(tagNum++);
+                        double x = Double.parseDouble(document.getY());
+                        double y = Double.parseDouble(document.getX());
+                        Log.e("이거 왜이래", x +"   "+ y);
+                        //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
+                        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
+                        marker.setMapPoint(mapPoint);
+                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                        marker.setCustomImageResourceId(R.drawable.pills_maker); // 마커 이미지.
+                        marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                        marker.setCustomImageAnchor(0.5f, 1.0f);
+                        mMapView.addPOIItem(marker);
+                    }
+                } else {
+                    try {
+
+                        String str = response.errorBody().string();
+                        Log.e("tag2", str);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("ta2", response.code() + " " + response.message() + response.errorBody().toString());
+
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<CategoryResult> call, Throwable t) {
+                Log.d("retrofit", "통신 실패" + x + y);
+                Log.d("retrofit", x + " " + y);
+                Log.d("retrofit", t.getMessage());
+                Log.d("retrofit", t.getCause().toString());
+                t.getCause();
+
+
+            }
+
+        });
 
     }
 
