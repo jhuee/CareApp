@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
                         marker.setMapPoint(mapPoint);
                         marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                        marker.setCustomImageResourceId(R.drawable.hospital_maker); // 마커 이미지.
+                        marker.setCustomImageResourceId(R.drawable.hospital_marker); // 마커 이미지.
                         marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                         marker.setCustomImageAnchor(0.5f, 1.0f);
                         mMapView.addPOIItem(marker);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private void requestPharmacyLocal(double x, double y) {
         pharmacyList.clear();
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<CategoryResult> call = apiInterface.getSearchPharmacy(getString(R.string.restapi_key), "PM9", y+ "", x + "", 10000); //반경 2km로
+        Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "애견샵", y+ "", x + "", 10000); //반경 2km로
         call.enqueue(new Callback<CategoryResult>() {
             @Override
             public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
                         marker.setMapPoint(mapPoint);
                         marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                        marker.setCustomImageResourceId(R.drawable.pills_maker); // 마커 이미지.
+                        marker.setCustomImageResourceId(R.drawable.petshop_marker2); // 마커 이미지.
                         marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                         marker.setCustomImageAnchor(0.5f, 1.0f);
                         mMapView.addPOIItem(marker);

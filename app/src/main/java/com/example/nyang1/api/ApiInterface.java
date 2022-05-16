@@ -22,11 +22,11 @@ public interface ApiInterface {
     );
 
     //카테고리로 검색
-    @GET("v2/local/search/category.json")
-    Call<CategoryResult> getSearchPharmacy(
+    @GET("v2/local/search/keyword.json")
+    Call<CategoryResult> getSearchPetShop(
             @Header("Authorization") String token,
 
-            @Query("category_group_code") String category_group_code,
+            @Query("query") String query,
             @Query("x") String x,
             @Query("y") String y,
             @Query("radius") int radius
