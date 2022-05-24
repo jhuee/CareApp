@@ -1,7 +1,6 @@
 package com.example.nyang1.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import net.daum.mf.map.api.MapCircle;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     MapPoint currentMapPoint;
 
 
+
     ArrayList<Document> hospitalList = new ArrayList<>(); //HP8
     ArrayList<Document> pharmacyList = new ArrayList<>(); //PM9
     MapPOIItem customMarker = new MapPOIItem();
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Shopping.class);
                 startActivity(intent);
-
             }
         });
         initView();
@@ -198,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         });
     }
 
-    private void requestPharmacyLocal(double x, double y) {
+    public void requestPharmacyLocal(double x, double y) {
         pharmacyList.clear();
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "애견샵", y+ "", x + "", 10000); //반경 2km로
@@ -259,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         });
 
     }
+
 
     @Override
     public void onMapViewInitialized(MapView mapView) {
@@ -321,8 +320,9 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-
+    public void onCalloutBalloonOfPOIItemTouched(MapView mMapView, MapPOIItem marker, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        Intent intent = new Intent(MainActivity.this, DetailView.class);
+        startActivity(intent);
     }
 
     @Override
