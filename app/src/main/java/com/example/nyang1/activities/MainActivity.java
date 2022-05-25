@@ -24,6 +24,7 @@ import com.example.nyang1.api.ApiInterface;
 import com.example.nyang1.category_search.CategoryResult;
 import com.example.nyang1.category_search.Document;
 import com.example.nyang1.shop.Shopping;
+import com.example.nyang1.utils.IntentKey;
 import com.kakao.util.maps.helper.Utility;
 
 import retrofit2.Call;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
 
     ArrayList<Document> hospitalList = new ArrayList<>(); //HP8
-    ArrayList<Document> pharmacyList = new ArrayList<>(); //PM9
+    ArrayList<Document> petshopList = new ArrayList<>(); //PM9
     MapPOIItem customMarker = new MapPOIItem();
 
     public void key() {
@@ -70,11 +71,19 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
         });
         initView();
+        processIntent();
         key();
     }
 
 
+    //인텐트처리
+    private void processIntent() {
+        Intent getIntent = getIntent();
 
+        hospitalList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA1);
+        petshopList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA2);
+
+    }
 
 
 
@@ -138,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private void requestHospitalLocal(double x, double y) {
         hospitalList.clear();
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<CategoryResult> call = apiInterface.getSearchHospital(getString(R.string.restapi_key), "동물병원", "HP8", y+ "", x + "", 10000); //반경 2km로
+        Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "동물병원",  y+ "", x + "", 10000); //반경 2km로
         call.enqueue(new Callback<CategoryResult>() {
             @Override
             public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
@@ -197,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     public void requestPharmacyLocal(double x, double y) {
-        pharmacyList.clear();
+        petshopList.clear();
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "애견샵", y+ "", x + "", 10000); //반경 2km로
         call.enqueue(new Callback<CategoryResult>() {
@@ -205,14 +214,14 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
                 Log.e("tag1", "확인");
                 if (response.isSuccessful()) {
-                    pharmacyList.addAll(response.body().getDocuments());
+                    petshopList.addAll(response.body().getDocuments());
                     final String result
                             = response.raw().body().toString();
                     Log.d("retrofit", result);
                     Log.e("retrofit", "성공");
 
                     int tagNum = 10;
-                    for (Document document : pharmacyList) {
+                    for (Document document : petshopList) {
                         MapPOIItem marker = new MapPOIItem();
                         marker.setItemName(document.getPlaceName());
                         marker.setTag(tagNum++);
@@ -320,9 +329,31 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mMapView, MapPOIItem marker, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-        Intent intent = new Intent(MainActivity.this, DetailView.class);
-        startActivity(intent);
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        double lat = mapPOIItem.getMapPoint().getMapPointGeoCoord().latitude;
+        double lng = mapPOIItem.getMapPoint().getMapPointGeoCoord().longitude;
+        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), mapPOIItem.getItemName(), String.valueOf(lat), String.valueOf(lng), 1);
+        call.enqueue(new Callback<CategoryResult>() {
+            @Override
+            public void onResponse( Call<CategoryResult> call,  Response<CategoryResult> response) {
+//                mLoaderLayout.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent(MainActivity.this, DetailView.class);
+                    assert response.body() != null;
+                    intent.putExtra(IntentKey.PLACE_SEARCH_DETAIL_EXTRA, response.body().getDocuments().get(0));
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CategoryResult> call, Throwable t) {
+//                FancyToast.makeText(getApplicationContext(), "해당장소에 대한 상세정보는 없습니다.", FancyToast.LENGTH_SHORT, FancyToast.ERROR, true).show();
+//                mLoaderLayout.setVisibility(View.GONE);
+                Intent intent = new Intent(MainActivity.this, DetailView.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
