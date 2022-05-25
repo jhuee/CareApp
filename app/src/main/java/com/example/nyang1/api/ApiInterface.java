@@ -25,7 +25,6 @@ public interface ApiInterface {
     @GET("v2/local/search/keyword.json")
     Call<CategoryResult> getSearchPetShop(
             @Header("Authorization") String token,
-
             @Query("query") String query,
             @Query("x") String x,
             @Query("y") String y,
@@ -37,7 +36,6 @@ public interface ApiInterface {
     Call<CategoryResult> getSearchHospital(
             @Header("Authorization") String token,
             @Query("query") String query,
-            @Query("category_group_code") String category_group_code,
             @Query("x") String x,
             @Query("y") String y,
             @Query("radius") int radius

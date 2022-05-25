@@ -164,8 +164,7 @@ public class Document implements Parcelable {
         dest.writeString(this.y);
     }
 
-    public Document() {
-    }
+
 
     protected Document(Parcel in) {
         this.placeName = in.readString();

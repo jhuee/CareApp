@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".shop.Shopping"></activity>
+        <activity android:name=".activities.DetailView"/>
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="efa51a86d3c5cef49b980a7205ff1e43"/>
     </application>
 

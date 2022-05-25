@@ -27,6 +27,8 @@ import com.example.nyang1.shop.Shopping;
 import com.example.nyang1.utils.IntentKey;
 import com.kakao.util.maps.helper.Utility;
 
+import org.jetbrains.annotations.NotNull;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
 
 
-    ArrayList<Document> hospitalList = new ArrayList<>(); //HP8
-    ArrayList<Document> petshopList = new ArrayList<>(); //PM9
+    ArrayList<Document> hospitalList = new ArrayList<>();
+    ArrayList<Document> petShopList = new ArrayList<>();
     MapPOIItem customMarker = new MapPOIItem();
 
     public void key() {
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        hospitalList.clear();
+        petShopList.clear();
         shop = findViewById(R.id.shopBtn);
         shop.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -71,19 +76,20 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
         });
         initView();
-        processIntent();
+
         key();
+//        processIntent();
     }
 
 
     //인텐트처리
-    private void processIntent() {
-        Intent getIntent = getIntent();
-
-        hospitalList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA1);
-        petshopList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA2);
-
-    }
+//    private void processIntent() {
+//        Intent getIntent = getIntent();
+//
+//        hospitalList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA1);
+//        petShopList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA2);
+//
+//    }
 
 
 
@@ -145,127 +151,137 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
 
     private void requestHospitalLocal(double x, double y) {
-        hospitalList.clear();
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "동물병원",  y+ "", x + "", 10000); //반경 2km로
-        call.enqueue(new Callback<CategoryResult>() {
-            @Override
-            public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
-                Log.e("tag1", "확인");
-                if (response.isSuccessful()) {
-                    hospitalList.addAll(response.body().getDocuments());
-                    final String result
-                            = response.raw().body().toString();
-                    Log.d("retrofit", result);
-                    Log.e("retrofit", "성공");
 
-                    int tagNum = 10;
-                    for (Document document : hospitalList) {
-                        MapPOIItem marker = new MapPOIItem();
-                        marker.setItemName(document.getPlaceName());
-                        marker.setTag(tagNum++);
-                        double x = Double.parseDouble(document.getY());
-                        double y = Double.parseDouble(document.getX());
-                        Log.e("이거 왜이래", x +"   "+ y);
-                        //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
-                        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
-                        marker.setMapPoint(mapPoint);
-                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                        marker.setCustomImageResourceId(R.drawable.hospital_marker); // 마커 이미지.
-                        marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-                        marker.setCustomImageAnchor(0.5f, 1.0f);
-                        mMapView.addPOIItem(marker);
-                    }
-                } else {
-                    try {
+            ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+            Call<CategoryResult> call = apiInterface.getSearchHospital(getString(R.string.restapi_key), "동물병원", y + "", x + "", 10000); //반경 2km로
+            call.enqueue(new Callback<CategoryResult>() {
+                @Override
+                public void onResponse(@NotNull Call<CategoryResult> call, @NotNull Response<CategoryResult> response) {
+                    Log.e("tag1", "확인");
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        if (response.body().getDocuments() != null) {
+                            hospitalList.addAll(response.body().getDocuments());
+                        }
 
-                        String str = response.errorBody().string();
-                        Log.e("tag2", str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+//                        final String result1 = response.raw().body().toString();
+//                        Log.d("retrofit", result);
+                        Log.e("retrofit", "성공");
+
+                        int tagNum = 10;
+                        for (Document document : hospitalList) {
+                            MapPOIItem marker = new MapPOIItem();
+                            marker.setItemName(document.getPlaceName());
+                            marker.setTag(tagNum++);
+                            double x = Double.parseDouble(document.getY());
+                            double y = Double.parseDouble(document.getX());
+                            Log.e("이거 왜이래", x + "   " + y);
+                            //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
+                            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
+                            marker.setMapPoint(mapPoint);
+                            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                            marker.setCustomImageResourceId(R.drawable.hospital_marker); // 마커 이미지.
+                            marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                            marker.setCustomImageAnchor(0.5f, 1.0f);
+                            mMapView.addPOIItem(marker);
+                        }
+                    } else {
+                        try {
+
+                            assert response.errorBody() != null;
+                            String str = response.errorBody().string();
+                            Log.e("tag2", str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.e("ta2", response.code() + " " + response.message() + response.errorBody().toString());
+
+
                     }
-                    Log.e("ta2", response.code() + " " + response.message() + response.errorBody().toString());
+                }
+
+
+                @Override
+                public void onFailure(@NotNull Call<CategoryResult> call, @NotNull Throwable t) {
+                    Log.d("retrofit", "통신 실패" + x + y);
+                    Log.d("retrofit", x + " " + y);
+                    Log.d("retrofit", t.getMessage());
+                    Log.d("retrofit", t.getCause().toString());
+                    t.getCause();
 
 
                 }
-            }
 
+            });
 
-            @Override
-            public void onFailure(Call<CategoryResult> call, Throwable t) {
-                Log.d("retrofit", "통신 실패" + x + y);
-                Log.d("retrofit", x + " " + y);
-                Log.d("retrofit", t.getMessage());
-                Log.d("retrofit", t.getCause().toString());
-                t.getCause();
+        }
 
-
-            }
-
-        });
-    }
 
     public void requestPharmacyLocal(double x, double y) {
-        petshopList.clear();
-        ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "애견샵", y+ "", x + "", 10000); //반경 2km로
-        call.enqueue(new Callback<CategoryResult>() {
-            @Override
-            public void onResponse(Call<CategoryResult> call, Response<CategoryResult> response) {
-                Log.e("tag1", "확인");
-                if (response.isSuccessful()) {
-                    petshopList.addAll(response.body().getDocuments());
-                    final String result
-                            = response.raw().body().toString();
-                    Log.d("retrofit", result);
-                    Log.e("retrofit", "성공");
+            ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+            Call<CategoryResult> call = apiInterface.getSearchPetShop(getString(R.string.restapi_key), "애견샵", y + "", x + "", 10000); //반경 2km로
+            call.enqueue(new Callback<CategoryResult>() {
+                @Override
+                public void onResponse(@NotNull Call<CategoryResult> call, @NotNull Response<CategoryResult> response) {
+                    Log.e("tag1", "확인");
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
 
-                    int tagNum = 10;
-                    for (Document document : petshopList) {
-                        MapPOIItem marker = new MapPOIItem();
-                        marker.setItemName(document.getPlaceName());
-                        marker.setTag(tagNum++);
-                        double x = Double.parseDouble(document.getY());
-                        double y = Double.parseDouble(document.getX());
-                        Log.e("이거 왜이래", x +"   "+ y);
-                        //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
-                        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
-                        marker.setMapPoint(mapPoint);
-                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                        marker.setCustomImageResourceId(R.drawable.petshop_marker2); // 마커 이미지.
-                        marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-                        marker.setCustomImageAnchor(0.5f, 1.0f);
-                        mMapView.addPOIItem(marker);
-                    }
-                } else {
-                    try {
+                        if (response.body().getDocuments() != null) {
+                            petShopList.addAll(response.body().getDocuments());
 
-                        String str = response.errorBody().string();
-                        Log.e("tag2", str);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        }
+//                        final String result = response.raw().body().toString();
+//                        Log.d("retrofit", result);
+                        Log.e("retrofit", "성공");
+
+                        int tagNum = 10;
+                        for (Document document : petShopList) {
+                            MapPOIItem marker = new MapPOIItem();
+                            marker.setItemName(document.getPlaceName());
+                            marker.setTag(tagNum++);
+                            double x = Double.parseDouble(document.getY());
+                            double y = Double.parseDouble(document.getX());
+                            Log.e("이거 왜이래", x + "   " + y);
+                            //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
+                            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
+                            marker.setMapPoint(mapPoint);
+                            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                            marker.setCustomImageResourceId(R.drawable.petshop_marker2); // 마커 이미지.
+                            marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                            marker.setCustomImageAnchor(0.5f, 1.0f);
+                            mMapView.addPOIItem(marker);
+                        }
+                    } else {
+                        try {
+
+                            String str = response.errorBody().string();
+                            Log.e("tag2", str);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.e("ta2", response.code() + " " + response.message() + response.errorBody().toString());
+
+
                     }
-                    Log.e("ta2", response.code() + " " + response.message() + response.errorBody().toString());
+                }
+
+
+                @Override
+                public void onFailure(@NotNull Call<CategoryResult> call, @NotNull Throwable t) {
+                    Log.d("retrofit", "통신 실패" + x + y);
+                    Log.d("retrofit", x + " " + y);
+                    Log.d("retrofit", t.getMessage());
+                    Log.d("retrofit", t.getCause().toString());
+                    t.getCause();
 
 
                 }
-            }
 
+            });
 
-            @Override
-            public void onFailure(Call<CategoryResult> call, Throwable t) {
-                Log.d("retrofit", "통신 실패" + x + y);
-                Log.d("retrofit", x + " " + y);
-                Log.d("retrofit", t.getMessage());
-                Log.d("retrofit", t.getCause().toString());
-                t.getCause();
+        }
 
-
-            }
-
-        });
-
-    }
 
 
     @Override
