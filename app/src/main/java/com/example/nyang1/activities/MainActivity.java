@@ -7,27 +7,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-
-
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.nyang1.R;
+import com.example.nyang1.api.ApiClient;
+import com.example.nyang1.api.ApiInterface;
+import com.example.nyang1.calendar.CalendarView;
+import com.example.nyang1.category_search.CategoryResult;
+import com.example.nyang1.category_search.Document;
+import com.example.nyang1.utils.IntentKey;
+import com.kakao.util.maps.helper.Utility;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.example.nyang1.R;
-import com.example.nyang1.api.ApiClient;
-import com.example.nyang1.api.ApiInterface;
-import com.example.nyang1.category_search.CategoryResult;
-import com.example.nyang1.category_search.Document;
-import com.example.nyang1.shop.Shopping;
-import com.example.nyang1.utils.IntentKey;
-import com.kakao.util.maps.helper.Utility;
-
-import org.jetbrains.annotations.NotNull;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         shop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Shopping.class);
+                Intent intent = new Intent(MainActivity.this, CalendarView.class);
                 startActivity(intent);
             }
         });

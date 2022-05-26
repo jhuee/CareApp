@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Nyang1</string>
     <string name="restapi_key">KakaoAK af09bdf5053ceef61e79c7731727e109</string>
+
+    <string name="naver_client_id">6liYmXCsasxia3bBYbWt</string>
+    <string name="naver_client_secret">lYqJFVHhvw</string>
+    <string name="naver_client_name">Nyang1</string>
+    <string name="before"> 이전 </string>
+    <string name="forward">다음</string>
 </resources>

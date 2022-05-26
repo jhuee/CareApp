@@ -22,15 +22,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nyang1">
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.MainActivity"></activity>
         <activity android:name=".shop.Shopping"></activity>
         <activity android:name=".activities.DetailView"/>
+        <activity android:name=".calendar.CalendarView"></activity>
+
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="efa51a86d3c5cef49b980a7205ff1e43"/>
     </application>
 
