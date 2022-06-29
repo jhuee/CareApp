@@ -1,6 +1,7 @@
 package com.example.nyang1.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.nyang1.R;
 import com.example.nyang1.api.ApiClient;
 import com.example.nyang1.api.ApiInterface;
-import com.example.nyang1.calendar.CalendarView;
+import com.example.nyang1.calendar.CalendarViewD;
 import com.example.nyang1.category_search.CategoryResult;
 import com.example.nyang1.category_search.Document;
+import com.example.nyang1.shop.ShopActivity;
 import com.example.nyang1.utils.IntentKey;
 import com.kakao.util.maps.helper.Utility;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     //xml
     private ImageButton shop;
+    private ImageButton cal;
     //인터페이스
     private ApiInterface apiInterface;
 
@@ -65,29 +68,30 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
         hospitalList.clear();
         petShopList.clear();
-        shop = findViewById(R.id.shopBtn);
+        shop = findViewById(R.id.shop_bar);
+        cal = findViewById(R.id.cal_bar);
+
         shop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CalendarView.class);
+                Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(intent);
+            }
+        });
+        cal.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CalendarViewD.class);
                 startActivity(intent);
             }
         });
         initView();
 
         key();
-//        processIntent();
     }
 
 
-    //인텐트처리
-//    private void processIntent() {
-//        Intent getIntent = getIntent();
-//
-//        hospitalList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA1);
-//        petShopList = getIntent.getParcelableArrayListExtra(IntentKey.CATEGOTY_SEARCH_MODEL_EXTRA2);
-//
-//    }
 
 
 
@@ -173,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                             marker.setTag(tagNum++);
                             double x = Double.parseDouble(document.getY());
                             double y = Double.parseDouble(document.getX());
-                            Log.e("이거 왜이래", x + "   " + y);
+                            Log.e("현위치", x + "   " + y);
                             //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
                             MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
                             marker.setMapPoint(mapPoint);
@@ -204,8 +208,8 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                     Log.d("retrofit", "통신 실패" + x + y);
                     Log.d("retrofit", x + " " + y);
                     Log.d("retrofit", t.getMessage());
-                    Log.d("retrofit", t.getCause().toString());
-                    t.getCause();
+//                    Log.d("retrofit", t.getCause().toString());
+//                    t.getCause();
 
 
                 }
@@ -240,12 +244,12 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                             marker.setTag(tagNum++);
                             double x = Double.parseDouble(document.getY());
                             double y = Double.parseDouble(document.getX());
-                            Log.e("이거 왜이래", x + "   " + y);
-                            //카카오맵은 참고로 new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
+                            Log.e("현위치", x + "   " + y);
+                            //카카오맵은  new MapPoint()로  생성못함. 좌표기준이 여러개라 이렇게 메소드로 생성해야함
                             MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(x, y);
                             marker.setMapPoint(mapPoint);
                             marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                            marker.setCustomImageResourceId(R.drawable.petshop_marker2); // 마커 이미지.
+                            marker.setCustomImageResourceId(R.drawable.petshop_marker); // 마커 이미지.
                             marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
                             marker.setCustomImageAnchor(0.5f, 1.0f);
                             mMapView.addPOIItem(marker);
@@ -353,19 +357,21 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onResponse( Call<CategoryResult> call,  Response<CategoryResult> response) {
 //                mLoaderLayout.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
-                    Intent intent = new Intent(MainActivity.this, DetailView.class);
-                    assert response.body() != null;
+//                    Intent intent = new Intent(MainActivity.this, DetailView.class);
+//                    assert response.body() != null;
+
+//                    startActivity(intent);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.putExtra(IntentKey.PLACE_SEARCH_DETAIL_EXTRA, response.body().getDocuments().get(0));
+                    Document document = intent.getParcelableExtra(IntentKey.PLACE_SEARCH_DETAIL_EXTRA);
+                    intent.setData(Uri.parse(document.getPlaceUrl()));
                     startActivity(intent);
+
                 }
             }
 
             @Override
             public void onFailure(Call<CategoryResult> call, Throwable t) {
-//                FancyToast.makeText(getApplicationContext(), "해당장소에 대한 상세정보는 없습니다.", FancyToast.LENGTH_SHORT, FancyToast.ERROR, true).show();
-//                mLoaderLayout.setVisibility(View.GONE);
-                Intent intent = new Intent(MainActivity.this, DetailView.class);
-                startActivity(intent);
             }
         });
     }

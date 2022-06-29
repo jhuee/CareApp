@@ -2,6 +2,30 @@ plugins {
     id 'com.android.application'
 }
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'cosmocalendar'
+
+    publishedGroupId = 'com.github.applikeysolutions'
+    libraryName = 'Cosmocalendar'
+    artifact = 'cosmocalendar'
+
+    libraryDescription = 'Customizable calendar on Android'
+
+    siteUrl = 'https://github.com/AppliKeySolutions/CosmoCalendar'
+    gitUrl = 'https://github.com/AppliKeySolutions/CosmoCalendar.git'
+
+    libraryVersion = '1.0.4'
+
+    developerId = 'devilbrain666'
+    developerName = 'Ostapenko Yura'
+    developerEmail = 'ostapenko1990yura@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
@@ -27,6 +51,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     // Network - Retrofit & gson & okhttp3 & intercepter
@@ -53,7 +79,8 @@ dependencies {
     implementation files('libs/libDaumMapAndroid.jar')
     implementation 'org.jetbrains:annotations:15.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
-    testImplementation 'junit:junit:4.+'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
@@ -61,8 +88,31 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.0.0"
     implementation "androidx.legacy:legacy-support-core-utils:1.0.0"
     implementation "androidx.browser:browser:1.0.0"
-    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+
 
     //캘린더 라이브러리
-    implementation "com.github.prolificinteractive:material-calendarview:${version}"
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+
+    //edit text
+    implementation 'com.google.android.material:material:1.4.0'
+
+    implementation 'androidx.media:media:1.3.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'pub.devrel:easypermissions:0.3.0'
+    implementation('com.google.api-client:google-api-client-android:1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.apis:google-api-services-calendar:v3-rev235-1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+    //error
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

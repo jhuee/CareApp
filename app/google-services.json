@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "878841325273",
+    "firebase_url": "https://nyang1-default-rtdb.firebaseio.com",
+    "project_id": "nyang1",
+    "storage_bucket": "nyang1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878841325273:android:9dfa8bda175de1ee63c0c8",
+        "android_client_info": {
+          "package_name": "com.example.nyang1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878841325273-qfnlv8o30cpjd13v5rleobvokmq2ekfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArOIDfDaaDJhvaYzcAY7z-It2BdgBXKAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878841325273-qfnlv8o30cpjd13v5rleobvokmq2ekfs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
